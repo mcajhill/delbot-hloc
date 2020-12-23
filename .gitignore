@@ -1,4 +1,8 @@
+# folders
 node_modules/
 dist/
 lib/
 .idea/
+
+# config
+.env*
