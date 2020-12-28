@@ -1,7 +1,7 @@
 import axios from "axios";
 import dotenv from 'dotenv'
 import express from "express";
-import poller from './poller'
+import poller from './poller/poller'
 
 dotenv.config({path: `.env.${process.env.NODE_ENV}`})
 
@@ -22,6 +22,7 @@ app.listen(port, async () => {
   }
 
   const pollingFrequency = process.env.POLLING_FREQUENCY_MS
+
   if (pollingFrequency) {
     poller.setPollingFrequency(parseInt(pollingFrequency, 10))
   }

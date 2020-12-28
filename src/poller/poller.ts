@@ -1,4 +1,6 @@
 import {AxiosInstance} from "axios";
+import parseHlocData from "./hloc-parser";
+import {QuoteData} from "../types/types";
 
 let pollingFrequency: number = 1000
 const symbols: string[] = []
@@ -9,9 +11,14 @@ const poller = {
       try {
         const querySymbols = symbols.join(',')
         const apiToken = process.env.IEX_CLOUD_API_KEY
-        const url = `/stock/market/batch?symbols=${querySymbols}&types=ohlc&token=${apiToken}`;
+        const url = `/stock/market/batch?symbols=${querySymbols}&types=quote&token=${apiToken}`;
         const response = await axios.get(url)
-        console.log(`Poll: `, JSON.stringify(response.data))
+
+        for (const data of Object.values(response.data)) {
+          const {open, close, high, low, volume, latestUpdate} = (data as QuoteData)?.quote || {}
+          const hloc = parseHlocData(open, high, low, close, volume, latestUpdate)
+          console.log(hloc)
+        }
       } catch (err) {
         console.log(err)
       }
